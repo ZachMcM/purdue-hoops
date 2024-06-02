@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  createdAt      DateTime @default(now())
+  
+  id       String  @id @default(cuid())
+  email    String  @unique
+  password String
+  name     String
+  username String  @unique
+  image    String?
+
+  feet           Int?
+  inches         Int?
+  weight         Decimal?
+  position       String?
+  primarySkill   String?
+  secondarySkill String?
+
+  hoopingStatus  String @default("not-hooping")
+
+  overallRating  Int @default(60)
+
+  incomingRatings Rating[] @relation(name: "incoming")
+  outgoingRatings Rating[] @relation(name: "outgoing")
+
+  outgoingSearches User[] @relation(name: "searches")
+  incomingSearches User[] @relation(name: "searches")
+
+  hoopSessions HoopSession[]
+
+  @@index([id])
+}
+
+model Rating {
+  createdAt DateTime @default(now())
+
+  incomingUser User @relation(name: "incoming", fields: [incomingId], references: [id], onDelete: Cascade)
+  incomingId String
+
+  outgoingUser User @relation(name: "outgoing", fields: [outgoingId], references: [id], onDelete: Cascade)
+  outgoingId String
+
+  value Int
+
+  @@id(name: "ratingId", [incomingId,  outgoingId])
+}
+
+model HoopSession {
+  id String @id @default(cuid())
+  date DateTime @default(now())
+  gym String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  @@index([id])
+}

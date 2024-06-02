@@ -1,0 +1,33 @@
+{
+  "cli": {
+    "version": ">= 9.1.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal"
+    },
+    "production": {
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://goldfish-app-j8z7r.ondigitalocean.app",
+        "EXPO_PUBLIC_NEWS_API_URL": "https://purduesports.com/api/v2/stories?$pageIndex=0&$pageSize=3&sportId=6",
+        "EXPO_PUBLIC_PURDUE_SPORTS_URL": "https://purduesports.com"
+      },
+      "autoIncrement": true
+    },
+    "test": {
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://goldfish-app-j8z7r.ondigitalocean.app",
+        "EXPO_PUBLIC_NEWS_API_URL": "https://purduesports.com/api/v2/stories?$pageIndex=0&$pageSize=3&sportId=6",
+        "EXPO_PUBLIC_PURDUE_SPORTS_URL": "https://purduesports.com"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
