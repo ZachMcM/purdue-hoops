@@ -16,5 +16,5 @@ app.use(bodyParser.text({ limit: "200mb" }));
 app.use("/", routes);
 
 app.listen(port, () => {
-  console.log(`Nice! Server is running on port ${port}`);
+  console.log(`Server is running on port ${port}`);
 });
