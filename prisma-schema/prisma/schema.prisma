@@ -40,6 +40,9 @@ model User {
   outgoingSearches User[] @relation(name: "searches")
   incomingSearches User[] @relation(name: "searches")
 
+  incomingFriendships Friendship[] @relation(name: "incoming")
+  outgoingFriendships Friendship[] @relation(name: "outgoing")
+
   hoopSessions HoopSession[]
 
   @@index([id])
@@ -67,4 +70,20 @@ model HoopSession {
   userId String
 
   @@index([id])
+}
+
+model Friendship {
+  id String @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  incomingUser User @relation(name: "incoming", fields: [incomingId], references: [id], onDelete: Cascade)
+  incomingId String
+
+  outgoingUser User @relation(name: "outgoing", fields: [outgoingId], references: [id], onDelete: Cascade)
+  outgoingId String
+
+  status String @default("pending")
+
+  @@index([id])
+  @@unique([incomingId, outgoingId])
 }
