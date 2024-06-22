@@ -39,6 +39,7 @@ searchRoute.get("/users/search", authMiddleware, async (req, res) => {
       primarySkill: true,
       secondarySkill: true,
       overallRating: true,
+      hoopingStatus: true
     },
   });
 
@@ -109,7 +110,19 @@ searchRoute.get("/searches", authMiddleware, async (req, res) => {
       id: userId,
     },
     select: {
-      outgoingSearches: true,
+      outgoingSearches: {
+        select: {
+          id: true,
+          name: true,
+          image: true,
+          incomingRatings: true,
+          position: true,
+          primarySkill: true,
+          secondarySkill: true,
+          overallRating: true,
+          hoopingStatus: true
+        },
+      },
     },
   });
 

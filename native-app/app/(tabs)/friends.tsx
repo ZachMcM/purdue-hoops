@@ -119,7 +119,7 @@ export default function Tabs() {
             />
             {query.trim().length == 0 && (
               <RecentSearchList
-                users={recentSearches}
+                users={recentSearches as UserPreview[]}
                 reset={() => {
                   setQuery("");
                   debounceRequest();

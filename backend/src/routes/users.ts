@@ -51,6 +51,8 @@ usersRoute.get("/users/:userId", authMiddleware, async (req, res) => {
       incomingRatings: true,
       overallRating: true,
       password: false,
+      outgoingFriendships: true,
+      incomingFriendships: true
     },
   });
 

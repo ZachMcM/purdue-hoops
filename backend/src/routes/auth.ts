@@ -71,6 +71,8 @@ authRoute.get("/auth/session", authMiddleware, async (req, res) => {
           overallRating: true,
         },
       },
+      outgoingFriendships: true,
+      incomingFriendships: true
     },
   });
 

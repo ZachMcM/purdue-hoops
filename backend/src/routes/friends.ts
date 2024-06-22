@@ -11,70 +11,156 @@ friendsRoute.get("/friends/all", authMiddleware, async (req, res) => {
     where: {
       incomingId: userId,
       outgoingId: userId,
-      status: "accepted"
+      status: "accepted",
     },
     include: {
-      incomingUser: true,
-      outgoingUser: true
-    }
-  })
+      incomingUser: {
+        select: {
+          id: true,
+          name: true,
+          image: true,
+          incomingRatings: true,
+          position: true,
+          primarySkill: true,
+          secondarySkill: true,
+          overallRating: true,
+          hoopingStatus: true,
+        },
+      },
+      outgoingUser: {
+        select: {
+          id: true,
+          name: true,
+          image: true,
+          incomingRatings: true,
+          position: true,
+          primarySkill: true,
+          secondarySkill: true,
+          overallRating: true,
+          hoopingStatus: true,
+        },
+      },
+    },
+  });
 
-  return res.json(friends)
+  return res.json(friends);
 });
 
-friendsRoute.get("/friends/requests/incoming", authMiddleware, async (req, res) => {
-  const userId = res.locals.userId
+friendsRoute.get(
+  "/friends/requests/incoming",
+  authMiddleware,
+  async (req, res) => {
+    const userId = res.locals.userId;
 
-  const incomingFriendRequests = await prisma.friendship.findMany({
-    where: {
-      incomingId: userId,
-      status: "pending"
-    },
-    include: {
-      outgoingUser: true
-    }
-  })
+    const incomingFriendRequests = await prisma.friendship.findMany({
+      where: {
+        incomingId: userId,
+        status: "pending",
+      },
+      include: {
+        outgoingUser: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+            incomingRatings: true,
+            position: true,
+            primarySkill: true,
+            secondarySkill: true,
+            overallRating: true,
+            hoopingStatus: true,
+          },
+        },
+      },
+    });
 
-  return res.json(incomingFriendRequests)
-})
+    return res.json(incomingFriendRequests);
+  }
+);
 
-friendsRoute.put("/friends/requests/incoming/:friendshipId", authMiddleware, async (req, res) => {
-  const userId = res.locals.userId
-  const { friendshipId } = req.params;
+// endpoint for retrieving friendship status when user is on the page
 
-  const acceptedFriendship = await prisma.friendship.update({
-    where: {
-      incomingId: userId,
-      id: friendshipId
-    },
-    data: {
-      status: "accepted"
-    }
-  })
+friendsRoute.get(
+  "/friends/status/:userId",
+  authMiddleware,
+  async (req, res) => {
+    console.log("Getting friendship status")
 
-  return res.json(acceptedFriendship)
-})
+    const sessionUser = res.locals.userId;
 
-friendsRoute.delete("/friends/requests/incoming/:friendshipId", authMiddleware, async (req, res) => {
-  const userId = res.locals.userId
-  const { friendshipId } = req.params;
+    const { userId } = req.params;
 
-  const deletedFriendship = await prisma.friendship.delete({
-    where: {
-      incomingId: userId,
-      id: friendshipId
-    }
-  })
+    const friendship = await prisma.friendship.findFirst({
+      where: {
+        OR: [
+          {
+            incomingId: sessionUser,
+            outgoingId: userId
+          },
+          {
+            incomingId: userId,
+            outgoingId: sessionUser
+          }
+        ]
+      },
+    });
 
-  return res.json(deletedFriendship)
-})
+    return res.json(friendship)
+  }
+);
+
+friendsRoute.put(
+  "/friends/requests/incoming/:friendshipId",
+  authMiddleware,
+  async (req, res) => {
+    const userId = res.locals.userId;
+    const { friendshipId } = req.params;
+
+    const acceptedFriendship = await prisma.friendship.update({
+      where: {
+        incomingId: userId,
+        id: friendshipId,
+      },
+      data: {
+        status: "accepted",
+      },
+    });
+
+    return res.json(acceptedFriendship);
+  }
+);
+
+friendsRoute.delete(
+  "/friends/requests/:friendshipId",
+  authMiddleware,
+  async (req, res) => {
+    const userId = res.locals.userId;
+    const { friendshipId } = req.params;
+
+    const deletedFriendship = await prisma.friendship.delete({
+      where: {
+        id: friendshipId,
+        OR: [
+          {
+            incomingId: userId,
+          },
+          {
+            outgoingId: userId,
+          },
+        ],
+      },
+    });
+
+    return res.json(deletedFriendship);
+  }
+);
 
 friendsRoute.post("/friends/requests", authMiddleware, async (req, res) => {
-  const outgoingId = res.locals.userId
+  const outgoingId = res.locals.userId;
 
   const { incomingId } = req.body as {
-    incomingId: string | null | undefined
-  }
+    incomingId: string | null | undefined;
+  };
 
   if (!incomingId) {
     return res.status(404).json({ error: "Error, no user found." });
@@ -83,9 +169,9 @@ friendsRoute.post("/friends/requests", authMiddleware, async (req, res) => {
   const newFriendship = await prisma.friendship.create({
     data: {
       incomingId,
-      outgoingId
-    }
-  })
+      outgoingId,
+    },
+  });
 
-  return res.json(newFriendship)
-})
+  return res.json(newFriendship);
+});

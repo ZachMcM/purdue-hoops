@@ -13,6 +13,7 @@ export type PartialUser = Prisma.UserGetPayload<{
     secondarySkill: true;
     image: true;
     overallRating: true;
+    hoopingStatus: true
   };
   include: {
     hoopSessions: true;
@@ -30,5 +31,6 @@ export type UserPreview = Prisma.UserGetPayload<{
     primarySkill: true;
     secondarySkill: true;
     overallRating: true;
+    hoopingStatus: true
   };
 }>;

@@ -29,7 +29,6 @@ export default function RecentSearch({
         method: "DELETE",
         headers: {
           "Access-Token": accessToken!,
-          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           userId,

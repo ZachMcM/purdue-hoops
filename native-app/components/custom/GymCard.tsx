@@ -38,7 +38,6 @@ export default function GymCard({ gym }: { gym: HoopingStatus }) {
         {
           headers: {
             "Access-Token": accessToken!,
-            "Content-Type": "application/json",
           },
         },
       );
@@ -75,7 +74,7 @@ export default function GymCard({ gym }: { gym: HoopingStatus }) {
               <Dialog>
                 <DialogTrigger asChild>
                   <Button size="sm" variant="gold">
-                    <Text className="text-background text-sm font-medium">
+                    <Text>
                       View Players
                     </Text>
                   </Button>

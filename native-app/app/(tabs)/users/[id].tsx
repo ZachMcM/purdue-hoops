@@ -2,7 +2,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import { getItemAsync } from "expo-secure-store";
-import { useState } from "react";
+import { Friendship } from "purdue-hoops-prisma-schema";
+import { useEffect, useState } from "react";
 import { Controller, FieldValues, useForm } from "react-hook-form";
 import {
   ActivityIndicator,
@@ -12,6 +13,7 @@ import {
 } from "react-native";
 import Toast from "react-native-toast-message";
 import * as zod from "zod";
+import FriendButton from "~/components/friendship/FriendButton";
 import { useSession } from "~/components/providers/SessionProvider";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -39,7 +41,7 @@ const schema = zod.object({
       .number()
       .int()
       .min(60, { message: "Min rating is 60." })
-      .max(99, { message: "Max rating is 99." }),
+      .max(99, { message: "Max rating is 99." })
   ),
 });
 
@@ -57,9 +59,8 @@ export default function User() {
         {
           headers: {
             "Access-Token": accessToken!,
-            "Content-Type": "application/json",
           },
-        },
+        }
       );
 
       const data = await res.json();
@@ -87,6 +88,8 @@ export default function User() {
 
   const queryClient = useQueryClient();
 
+  // rating mutations
+
   const { mutate: updateRating, isPending: isRatingUpdating } = useMutation({
     mutationFn: async (body: FormValues) => {
       const accessToken = await getItemAsync("Access-Token");
@@ -101,7 +104,7 @@ export default function User() {
             "Access-Token": accessToken!,
             "Content-Type": "application/json",
           },
-        },
+        }
       );
 
       const data = await res.json();
@@ -152,12 +155,12 @@ export default function User() {
             user && (
               <View className="flex flex-col gap-8">
                 <UserCard user={user} />
-                <View className="flex flex-row gap-4 items-center justify-center">
+                <View className="flex flex-row gap-3 items-center justify-center flex-wrap">
                   <Badge>
                     <Text>
                       {
                         hoopingStatuses.find(
-                          (s) => s.value === user.hoopingStatus,
+                          (s) => s.value === user.hoopingStatus
                         )?.label
                       }
                     </Text>
@@ -225,6 +228,7 @@ export default function User() {
                       </DialogContent>
                     </Dialog>
                   )}
+                  <FriendButton user={user} />
                 </View>
               </View>
             )

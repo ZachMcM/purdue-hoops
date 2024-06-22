@@ -27,7 +27,6 @@ export default function StatusButton() {
       const res = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/status`, {
         headers: {
           "Access-Token": accessToken!,
-          "Content-Type": "application/json",
         },
       });
 

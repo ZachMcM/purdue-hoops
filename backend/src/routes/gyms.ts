@@ -24,6 +24,7 @@ gymsRoute.get("/gyms", authMiddleware, async (req, res) => {
       primarySkill: true,
       secondarySkill: true,
       overallRating: true,
+      hoopingStatus: true
     },
   });
 
