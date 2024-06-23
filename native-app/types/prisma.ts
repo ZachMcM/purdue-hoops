@@ -34,3 +34,34 @@ export type UserPreview = Prisma.UserGetPayload<{
     hoopingStatus: true
   };
 }>;
+
+export type FriendshipExtended = Prisma.FriendshipGetPayload<{
+  include: {
+    incomingUser: {
+      select: {
+        id: true,
+        name: true,
+        image: true,
+        incomingRatings: true,
+        position: true,
+        primarySkill: true,
+        secondarySkill: true,
+        overallRating: true,
+        hoopingStatus: true,
+      },
+    },
+    outgoingUser: {
+      select: {
+        id: true,
+        name: true,
+        image: true,
+        incomingRatings: true,
+        position: true,
+        primarySkill: true,
+        secondarySkill: true,
+        overallRating: true,
+        hoopingStatus: true,
+      },
+    },
+  },
+}>

@@ -7,7 +7,7 @@ import { PartialUser } from "~/types/prisma";
 import { useSession } from "../providers/SessionProvider";
 import { Button } from "../ui/button";
 import { Text } from "../ui/text";
-
+import { Feather } from '@expo/vector-icons';
 export default function FriendButton({ user }: { user: PartialUser }) {
   const { session } = useSession();
 
@@ -80,6 +80,9 @@ export default function FriendButton({ user }: { user: PartialUser }) {
       queryClient.invalidateQueries({
         queryKey: ["friends"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["friend-requests"],
+      });
 
       Toast.show({
         type: "success",
@@ -125,6 +128,9 @@ export default function FriendButton({ user }: { user: PartialUser }) {
         });
         queryClient.invalidateQueries({
           queryKey: ["friends"],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["friend-requests"],
         });
 
         Toast.show({
@@ -173,6 +179,9 @@ export default function FriendButton({ user }: { user: PartialUser }) {
         queryClient.invalidateQueries({
           queryKey: ["friends"],
         });
+        queryClient.invalidateQueries({
+          queryKey: ["friend-requests"],
+        });
 
         Toast.show({
           type: "success",
@@ -202,7 +211,43 @@ export default function FriendButton({ user }: { user: PartialUser }) {
             />
           )}
         </Button>
-      ) : friendship?.status == "accepted" ? (
+      ) : friendship?.status == "pending" &&
+        friendship?.incomingId == session?.userId ? (
+        <View className="flex flex-row items-center flex-wrap gap-2">
+          <Button
+            onPress={() => acceptFriend()}
+            className="flex flex-row items-center gap-3 w-36"
+            size="sm"
+            variant="gold"
+          >
+            <Text>Accept Friend</Text>
+            {acceptingFriendPending && (
+              <ActivityIndicator
+                size="small"
+                hidesWhenStopped
+                animating={acceptingFriendPending}
+                className="text-background"
+              />
+            )}
+          </Button>
+          <Button
+            onPress={() => removeFriend()}
+            className="flex flex-row items-center gap-2 w-36"
+            size="sm"
+            variant="destructive"
+          >
+            <Text>Reject Friend</Text>
+            {acceptingFriendPending && (
+              <ActivityIndicator
+                size="small"
+                hidesWhenStopped
+                animating={acceptingFriendPending}
+                className="text-background"
+              />
+            )}
+          </Button>
+        </View>
+      ) : (
         <Button
           onPress={() => removeFriend()}
           className="flex flex-row items-center gap-2 w-36"
@@ -219,44 +264,6 @@ export default function FriendButton({ user }: { user: PartialUser }) {
             />
           )}
         </Button>
-      ) : (
-        friendship?.status == "pending" &&
-        friendship?.incomingId == session?.userId && (
-          <View className="flex flex-row items-center flex-wrap gap-2">
-            <Button
-              onPress={() => acceptFriend()}
-              className="flex flex-row items-center gap-3 w-36"
-              size="sm"
-              variant="gold"
-            >
-              <Text>Accept Friend</Text>
-              {acceptingFriendPending && (
-                <ActivityIndicator
-                  size="small"
-                  hidesWhenStopped
-                  animating={acceptingFriendPending}
-                  className="text-background"
-                />
-              )}
-            </Button>
-            <Button
-              onPress={() => removeFriend()}
-              className="flex flex-row items-center gap-2 w-36"
-              size="sm"
-              variant="destructive"
-            >
-              <Text>Reject Friend</Text>
-              {acceptingFriendPending && (
-                <ActivityIndicator
-                  size="small"
-                  hidesWhenStopped
-                  animating={acceptingFriendPending}
-                  className="text-background"
-                />
-              )}
-            </Button>
-          </View>
-        )
       )}
     </>
   );

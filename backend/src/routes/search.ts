@@ -76,9 +76,9 @@ searchRoute.post("/searches", authMiddleware, async (req, res) => {
   return res.json(updatedUser);
 });
 
-searchRoute.delete("/searches", authMiddleware, async (req, res) => {
+searchRoute.delete("/searches/:incomingId", authMiddleware, async (req, res) => {
   const outgoingId = res.locals.userId;
-  const incomingId = req.body.userId as string | null | undefined;
+  const { incomingId } = req.params
 
   if (!incomingId) {
     return res

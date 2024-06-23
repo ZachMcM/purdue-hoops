@@ -9,8 +9,10 @@ friendsRoute.get("/friends/all", authMiddleware, async (req, res) => {
 
   const friends = await prisma.friendship.findMany({
     where: {
-      incomingId: userId,
-      outgoingId: userId,
+      OR: [
+        { incomingId: userId },
+        { outgoingId: userId }
+      ],
       status: "accepted",
     },
     include: {

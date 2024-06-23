@@ -1,20 +1,18 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { getItemAsync } from "expo-secure-store";
-import { UserPreview } from "~/types/prisma";
-import UserView from "../user/UserView";
-import { Pressable, View } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { Text } from "../ui/text";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
+import { getItemAsync } from "expo-secure-store";
+import { Pressable, View } from "react-native";
 import { useColorScheme } from "~/lib/useColorScheme";
+import { UserPreview } from "~/types/prisma";
+import { Button } from "../ui/button";
+import UserView from "../user/UserView";
 
 export default function RecentSearch({
   user,
-  deleteSearchState,
   reset,
 }: {
   user: UserPreview;
-  deleteSearchState: () => void;
   reset: () => void;
 }) {
   const queryClient = useQueryClient();
@@ -22,17 +20,14 @@ export default function RecentSearch({
   const { isDarkColorScheme } = useColorScheme();
 
   const { mutate: deleteSearch } = useMutation({
-    mutationFn: async ({ userId }: { userId: string }) => {
-      console.log(userId);
+    mutationFn: async () => {
+      console.log(user.id);
       const accessToken = await getItemAsync("Access-Token");
-      const res = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/searches`, {
+      const res = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/searches/${user.id}`, {
         method: "DELETE",
         headers: {
           "Access-Token": accessToken!,
         },
-        body: JSON.stringify({
-          userId,
-        }),
       });
 
       const data = await res.json();
@@ -58,20 +53,24 @@ export default function RecentSearch({
         className="w-full flex flex-1"
         onPress={() => {
           reset();
-          router.navigate(`/(tabs)/users/${user.id}`);
+          router.push(`/(tabs)/users/${user.id}`);
         }}
       >
         <UserView user={user} />
       </Pressable>
-      <Feather
+      <Button
+        size="icon"
+        variant="ghost"
         onPress={() => {
-          deleteSearchState();
-          deleteSearch({ userId: user.id });
+          deleteSearch();
         }}
-        name="x"
-        size={20}
-        color={isDarkColorScheme ? "#a1a1aa" : "#71717a"}
-      />
+      >
+        <Feather
+          name="x"
+          size={20}
+          color={isDarkColorScheme ? "white" : "black"}
+        />
+      </Button>
     </View>
   );
 }

@@ -13,15 +13,13 @@ export default function UserView({ user }: { user: UserPreview }) {
     <View className="flex flex-row w-full justify-between items-center">
       <View className="flex flex-row gap-3 items-center">
         <Image
-          className="bg-secondary h-12 w-12 rounded-full"
+          className="bg-secondary h-14 w-14 rounded-full"
           source={{ uri: user.image! }}
         />
-        <View className="flex flex-col">
-          <View className="flex flex-row gap-1 items-center">
+        <View className="flex flex-col gap-1">
+          <View className="flex flex-col">
+            <Text className="text-sm text-muted-foreground font-medium capitalize">({user.primarySkill} / {user.secondarySkill})</Text>
             <Text className="text-lg font-bold">{user.name}</Text>
-            <Text className="text-sm text-muted-foreground font-medium capitalize">
-              ({user.primarySkill})
-            </Text>
           </View>
           <View className="flex flex-row gap-1 items-center">
             <View
