@@ -22,7 +22,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
-    "purdue-hoops-prisma-schema": "^1.0.13-beta.1",
+    "purdue-hoops-prisma-schema": "^1.0.13",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
