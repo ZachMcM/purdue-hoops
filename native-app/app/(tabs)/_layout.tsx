@@ -89,13 +89,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="search"
+        name="friends"
         options={{
-          title: "Search",
+          title: "Friends",
           tabBarShowLabel: false,
           tabBarIcon: ({ focused, color }) => (
             <Feather
-              name="search"
+              name="users"
               size={18}
               color={
                 focused ? "#ceb888" : color

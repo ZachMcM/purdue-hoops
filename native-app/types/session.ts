@@ -32,6 +32,8 @@ export type Session =
                 overallRating: true;
               };
             };
+            outgoingFriendships: true,
+            incomingFriendships: true
           };
         }>,
         "password"

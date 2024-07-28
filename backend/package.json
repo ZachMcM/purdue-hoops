@@ -5,7 +5,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node dist/index.js",
-    "build": "mkdir dist && npm install && tsc"
+    "build": "mkdir dist && npm install && tsc",
+    "dev": "nodemon src/index.ts"
   },
   "keywords": [],
   "author": "",
@@ -21,7 +22,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
-    "purdue-hoops-prisma-schema": "^1.0.11",
+    "purdue-hoops-prisma-schema": "^1.0.13",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

@@ -13,6 +13,7 @@ export type PartialUser = Prisma.UserGetPayload<{
     secondarySkill: true;
     image: true;
     overallRating: true;
+    hoopingStatus: true
   };
   include: {
     hoopSessions: true;
@@ -30,5 +31,37 @@ export type UserPreview = Prisma.UserGetPayload<{
     primarySkill: true;
     secondarySkill: true;
     overallRating: true;
+    hoopingStatus: true
   };
 }>;
+
+export type FriendshipExtended = Prisma.FriendshipGetPayload<{
+  include: {
+    incomingUser: {
+      select: {
+        id: true,
+        name: true,
+        image: true,
+        incomingRatings: true,
+        position: true,
+        primarySkill: true,
+        secondarySkill: true,
+        overallRating: true,
+        hoopingStatus: true,
+      },
+    },
+    outgoingUser: {
+      select: {
+        id: true,
+        name: true,
+        image: true,
+        incomingRatings: true,
+        position: true,
+        primarySkill: true,
+        secondarySkill: true,
+        overallRating: true,
+        hoopingStatus: true,
+      },
+    },
+  },
+}>

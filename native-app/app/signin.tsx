@@ -30,7 +30,7 @@ export default function SignIn() {
             <SignInForm />
             <Text className="text-center">
               Don't have an account?{" "}
-              <Link replace href="/signup" className="underline">
+              <Link push href="/signup" className="underline">
                 Sign Up
               </Link>
             </Text>

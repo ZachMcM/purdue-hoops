@@ -3,7 +3,13 @@ import { router } from "expo-router";
 import { getItemAsync } from "expo-secure-store";
 import debounce from "lodash.debounce";
 import { useCallback, useState } from "react";
-import { KeyboardAvoidingView, Pressable, ScrollView, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Pressable,
+  ScrollView,
+  View,
+} from "react-native";
+import FriendList from "~/components/friendship/FriendList";
 import { useSession } from "~/components/providers/SessionProvider";
 import RecentSearchList from "~/components/search/RecentSearchList";
 import { Input } from "~/components/ui/input";
@@ -43,27 +49,6 @@ export default function Tabs() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["recentSearches"] });
     },
-  });
-
-  const { data: recentSearches } = useQuery({
-    queryKey: ["recentSearches"],
-    queryFn: async (): Promise<UserPreview[]> => {
-      const accessToken = await getItemAsync("Access-Token");
-      const res = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/searches`, {
-        headers: {
-          "Access-Token": accessToken!,
-        },
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error);
-      }
-
-      return data;
-    },
-    initialData: session?.user.outgoingSearches,
   });
 
   const {
@@ -119,7 +104,6 @@ export default function Tabs() {
             />
             {query.trim().length == 0 && (
               <RecentSearchList
-                users={recentSearches}
                 reset={() => {
                   setQuery("");
                   debounceRequest();
@@ -148,6 +132,7 @@ export default function Tabs() {
                     </Pressable>
                   )))}
           </View>
+          <FriendList />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

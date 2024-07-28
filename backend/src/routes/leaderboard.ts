@@ -15,6 +15,7 @@ leaderboardRoute.get("/users/leaderboard", authMiddleware, async (req, res) => {
       primarySkill: true,
       secondarySkill: true,
       overallRating: true,
+      hoopingStatus: true
     },
     orderBy: [
       {

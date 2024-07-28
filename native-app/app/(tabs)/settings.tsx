@@ -32,7 +32,6 @@ export default function Tab() {
         method: "DELETE",
         headers: {
           "Access-Token": accessToken!,
-          "Content-Type": "application/json",
         },
       });
 

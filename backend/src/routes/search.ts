@@ -39,6 +39,7 @@ searchRoute.get("/users/search", authMiddleware, async (req, res) => {
       primarySkill: true,
       secondarySkill: true,
       overallRating: true,
+      hoopingStatus: true
     },
   });
 
@@ -75,9 +76,9 @@ searchRoute.post("/searches", authMiddleware, async (req, res) => {
   return res.json(updatedUser);
 });
 
-searchRoute.delete("/searches", authMiddleware, async (req, res) => {
+searchRoute.delete("/searches/:incomingId", authMiddleware, async (req, res) => {
   const outgoingId = res.locals.userId;
-  const incomingId = req.body.userId as string | null | undefined;
+  const { incomingId } = req.params
 
   if (!incomingId) {
     return res
@@ -109,7 +110,19 @@ searchRoute.get("/searches", authMiddleware, async (req, res) => {
       id: userId,
     },
     select: {
-      outgoingSearches: true,
+      outgoingSearches: {
+        select: {
+          id: true,
+          name: true,
+          image: true,
+          incomingRatings: true,
+          position: true,
+          primarySkill: true,
+          secondarySkill: true,
+          overallRating: true,
+          hoopingStatus: true
+        },
+      },
     },
   });
 
