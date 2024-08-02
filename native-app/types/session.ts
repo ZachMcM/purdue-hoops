@@ -52,28 +52,32 @@ export type SessionProviderValues = {
     username,
     email,
     password,
-    height,
-    weight,
-    position,
-    primarySkill,
-    secondarySkill,
   }: {
     name: string;
     username: string;
     email: string;
     password: string;
-    height: {
-      feet: number;
-      inches: number;
-    };
-    weight: number;
-    position: string;
-    primarySkill: string;
-    secondarySkill: string;
   }) => void;
   isSignInPending: boolean;
   isSignUpPending: boolean;
   isSessionPending: boolean;
   isSessionFetching: boolean;
   isSignOutPending: boolean;
+  isSetUpPending: boolean
+  setUp: ({
+    position,
+    height,
+    weight,
+    primarySkill,
+    secondarySkill
+  }: {
+    position: string,
+    height: {
+      inches: number,
+      feet: number
+    },
+    weight: number,
+    primarySkill: string,
+    secondarySkill: string
+  }) => void
 };

@@ -52,7 +52,7 @@ usersRoute.get("/users/:userId", authMiddleware, async (req, res) => {
       overallRating: true,
       password: false,
       outgoingFriendships: true,
-      incomingFriendships: true
+      incomingFriendships: true,
     },
   });
 
@@ -63,6 +63,42 @@ usersRoute.get("/users/:userId", authMiddleware, async (req, res) => {
   console.log(user);
 
   return res.json(user);
+});
+
+usersRoute.put("/users/account/setup", authMiddleware, async (req, res) => {
+  const userId = res.locals.userId;
+
+  console.log(req.body)
+
+  const { inches, feet, weight, position, primarySkill, secondarySkill } =
+    req.body as {
+      inches?: number;
+      feet?: number;
+      weight?: number;
+      position?: string;
+      primarySkill?: string;
+      secondarySkill?: string;
+    };
+
+    if (!inches || !feet || !weight || !position || !primarySkill || !secondarySkill) {
+      return res.status(404).json({ error: "Error, invalid payload." });
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: {
+        id: userId
+      },
+      data: {
+        inches,
+        feet,
+        weight,
+        position,
+        primarySkill,
+        secondarySkill
+      }
+    })
+
+    return res.json(updatedUser)
 });
 
 usersRoute.put("/users/account", authMiddleware, async (req, res) => {

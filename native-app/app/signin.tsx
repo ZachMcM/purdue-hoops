@@ -1,4 +1,4 @@
-import { Link, Redirect } from "expo-router";
+import { Link, Redirect, router } from "expo-router";
 import { ActivityIndicator, KeyboardAvoidingView, ScrollView, View } from "react-native";
 import SignInForm from "~/components/forms/auth/SignInForm";
 import { useSession } from "~/components/providers/SessionProvider";
@@ -30,7 +30,7 @@ export default function SignIn() {
             <SignInForm />
             <Text className="text-center">
               Don't have an account?{" "}
-              <Link push href="/signup" className="underline">
+              <Link replace href="/signup" className="underline">
                 Sign Up
               </Link>
             </Text>

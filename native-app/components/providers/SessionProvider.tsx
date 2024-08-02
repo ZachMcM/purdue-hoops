@@ -11,7 +11,11 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
   // the session variable
 
-  const { data: session, isPending: isSessionPending, isFetching: isSessionFetching } = useQuery({
+  const {
+    data: session,
+    isPending: isSessionPending,
+    isFetching: isSessionFetching,
+  } = useQuery({
     queryKey: ["session"],
     queryFn: async (): Promise<null | Session> => {
       console.log("session query");
@@ -25,7 +29,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
           headers: {
             "Access-Token": accessToken!,
           },
-        },
+        }
       );
 
       const data = await res.json();
@@ -59,7 +63,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
           headers: {
             "Content-Type": "application/json",
           },
-        },
+        }
       );
 
       const data = await res.json();
@@ -90,6 +94,68 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     },
   });
 
+  // function to set up the account
+
+  const { mutate: setUp, isPending: isSetUpPending } = useMutation({
+    mutationFn: async ({
+      position,
+      height,
+      weight,
+      primarySkill,
+      secondarySkill
+    }: {
+      position: string,
+      height: {
+        inches: number,
+        feet: number
+      },
+      weight: number,
+      primarySkill: string,
+      secondarySkill: string
+    }) => {
+      const accessToken = await getItemAsync("Access-Token");
+      const res = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/users/account/setup`,
+        {
+          method: "PUT",
+          headers: {
+            "Access-Token": accessToken!,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            position,
+            weight,
+            primarySkill,
+            secondarySkill,
+            inches: height.inches,
+            feet: height.feet
+          })
+        }
+      )
+
+      const data = await res.json()
+      if (!res.ok) {
+        throw new Error(data.error)
+      }
+
+      return data
+    },
+    onError: (err) => {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: err.message,
+      });
+    },
+    onSuccess: () => {
+      Toast.show({
+        type: "success",
+        text2: "Successfully setup your account up.",
+      });
+
+      queryClient.invalidateQueries({ queryKey: ["session"] });
+    },
+  })
+
   // sign up function
 
   const { mutate: signUp, isPending: isSignUpPending } = useMutation({
@@ -98,24 +164,11 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       username,
       email,
       password,
-      height,
-      weight,
-      position,
-      primarySkill,
-      secondarySkill,
     }: {
       name: string;
       username: string;
       email: string;
       password: string;
-      height: {
-        feet: number;
-        inches: number;
-      };
-      weight: number;
-      position: string;
-      primarySkill: string;
-      secondarySkill: string;
     }) => {
       const res = await fetch(
         `${process.env.EXPO_PUBLIC_API_URL}/auth/signup`,
@@ -129,14 +182,8 @@ export function SessionProvider({ children }: { children: ReactNode }) {
             username,
             email,
             password,
-            inches: height.inches,
-            feet: height.feet,
-            weight,
-            position,
-            primarySkill,
-            secondarySkill,
           }),
-        },
+        }
       );
 
       const data = await res.json();
@@ -207,6 +254,8 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         isSignInPending,
         isSignOutPending,
         isSignUpPending,
+        isSetUpPending,
+        setUp
       }}
     >
       {children}

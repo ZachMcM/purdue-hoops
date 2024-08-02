@@ -18,7 +18,7 @@ export default function FriendRequest({
 
   const queryClient = useQueryClient();
 
-  const { mutate: removeFriend, isPending: removingFriendPending } =
+  const { mutate: removeFriend } =
     useMutation({
       mutationFn: async () => {
         const accessToken = await getItemAsync("Access-Token");

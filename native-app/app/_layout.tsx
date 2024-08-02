@@ -112,8 +112,9 @@ export default function RootLayout() {
                 headerShadowVisible: true,
               }}
             />
-            <Stack.Screen name="signin" options={{ title: "Purdue Hoops" }} />
-            <Stack.Screen name="signup" options={{ title: "Purdue Hoops" }} />
+            <Stack.Screen name="signin" options={{ title: "Sign In" }} />
+            <Stack.Screen name="setup" options={{ title: "Set Up" }} />
+            <Stack.Screen name="signup" options={{ title: "Sign Up" }} />
           </Stack>
           <PortalHost />
           <ToastProvider />
