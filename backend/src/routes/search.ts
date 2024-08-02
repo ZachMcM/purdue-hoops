@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { authMiddleware } from "./auth";
 import prisma from "../prismaClient";
+import { isSetUp } from "../utils/clauses";
 
 export const searchRoute = Router();
 
@@ -15,19 +16,24 @@ searchRoute.get("/users/search", authMiddleware, async (req, res) => {
 
   const users = await prisma.user.findMany({
     where: {
-      OR: [
+      AND: [
         {
-          name: {
-            contains: query,
-            mode: "insensitive",
-          },
+          OR: [
+            {
+              name: {
+                contains: query,
+                mode: "insensitive",
+              },
+            },
+            {
+              username: {
+                contains: query,
+                mode: "insensitive",
+              },
+            },
+          ],
         },
-        {
-          username: {
-            contains: query,
-            mode: "insensitive",
-          },
-        },
+        isSetUp
       ],
     },
     select: {
@@ -39,7 +45,7 @@ searchRoute.get("/users/search", authMiddleware, async (req, res) => {
       primarySkill: true,
       secondarySkill: true,
       overallRating: true,
-      hoopingStatus: true
+      hoopingStatus: true,
     },
   });
 
@@ -76,31 +82,35 @@ searchRoute.post("/searches", authMiddleware, async (req, res) => {
   return res.json(updatedUser);
 });
 
-searchRoute.delete("/searches/:incomingId", authMiddleware, async (req, res) => {
-  const outgoingId = res.locals.userId;
-  const { incomingId } = req.params
+searchRoute.delete(
+  "/searches/:incomingId",
+  authMiddleware,
+  async (req, res) => {
+    const outgoingId = res.locals.userId;
+    const { incomingId } = req.params;
 
-  if (!incomingId) {
-    return res
-      .status(400)
-      .json({ error: "Invalid request, no user id provided." });
+    if (!incomingId) {
+      return res
+        .status(400)
+        .json({ error: "Invalid request, no user id provided." });
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: {
+        id: outgoingId,
+      },
+      data: {
+        outgoingSearches: { disconnect: { id: incomingId } },
+      },
+    });
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "Error, no user found." });
+    }
+
+    return res.json(updatedUser);
   }
-
-  const updatedUser = await prisma.user.update({
-    where: {
-      id: outgoingId,
-    },
-    data: {
-      outgoingSearches: { disconnect: { id: incomingId } },
-    },
-  });
-
-  if (!updatedUser) {
-    return res.status(404).json({ error: "Error, no user found." });
-  }
-
-  return res.json(updatedUser);
-});
+);
 
 searchRoute.get("/searches", authMiddleware, async (req, res) => {
   const { userId } = res.locals;
@@ -120,7 +130,7 @@ searchRoute.get("/searches", authMiddleware, async (req, res) => {
           primarySkill: true,
           secondarySkill: true,
           overallRating: true,
-          hoopingStatus: true
+          hoopingStatus: true,
         },
       },
     },

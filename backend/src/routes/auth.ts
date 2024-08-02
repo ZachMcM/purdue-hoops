@@ -95,36 +95,18 @@ authRoute.post("/auth/signup", async (req, res) => {
     username,
     email,
     password,
-    feet,
-    inches,
-    weight,
-    position,
-    primarySkill,
-    secondarySkill,
   } = req.body as {
     name?: string;
     username?: string;
     email?: string;
     password?: string;
-    feet?: number;
-    inches?: number;
-    weight?: number;
-    position?: string;
-    primarySkill?: string;
-    secondarySkill?: string;
   };
 
   if (
     !name ||
     !username ||
     !email ||
-    !password ||
-    !feet ||
-    !inches ||
-    !weight ||
-    !position ||
-    !primarySkill ||
-    !secondarySkill
+    !password
   ) {
     return res.status(400).json({ error: "Invalid request, invalid payload" });
   }
@@ -168,12 +150,6 @@ authRoute.post("/auth/signup", async (req, res) => {
       username,
       email,
       password: encryptedPassword,
-      feet,
-      inches,
-      weight,
-      position,
-      primarySkill,
-      secondarySkill,
     },
   });
 

@@ -12,7 +12,12 @@ export default function TabLayout() {
       <ActivityIndicator size="large" />
     </View>  ) : !session ? (
     <Redirect href="/signin" />
-  ) : (
+  ) : !session?.user.inches ||
+  !session.user.position ||
+  !session.user.primarySkill ||
+  !session.user.feet ||
+  !session.user.secondarySkill ||
+  !session.user.weight ? <Redirect href="/setup"/> : (
     <Tabs>
       <Tabs.Screen
         name="index"
