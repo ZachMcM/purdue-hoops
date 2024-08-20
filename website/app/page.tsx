@@ -1,16 +1,11 @@
 import Image from "next/image";
-import mockupOne from "../public/main.png";
+import { FaAppStoreIos } from "react-icons/fa";
 import mockupTwo from "../public/leaderboard.png";
-import icon from "./favicon.ico";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
+import mockupOne from "../public/main.png";
 
-import Link from "next/link";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { SupportForm } from "@/components/SupportForm";
-import { NotifyForm } from "@/components/NotifyForm";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Component() {
   return (
@@ -36,9 +31,9 @@ export default function Component() {
                   center, track your stats, and connect with fellow ballers.
                 </p>
               </div>
-              <Link href="#">
-                <Button>Coming Soon...</Button>
-              </Link>
+              <a href="https://apps.apple.com/us/app/purdue-hoops/id6503179035">
+                <Button>Download Now</Button>
+              </a>
             </div>
           </div>
         </div>
@@ -100,8 +95,8 @@ export default function Component() {
         </div>
       </section>
       <section className="w-full py-12 md:py-24 lg:py-32 border-t">
-        <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
-          <div className="space-y-3">
+        <div className="container flex-col flex items-center justify-center gap-8 px-4 text-center md:px-6">
+          <div className="flex flex-col gap-4 text-center items-center justify-center">
             <h2 className="text-3xl font-bold md:text-4xl/tight">
               Download Purdue Hoops Today
             </h2>
@@ -109,11 +104,11 @@ export default function Component() {
               Get the app and start connecting with your fellow Purdue ballers.
               Compete on the leaderboard, build your profile, and find pickup
               games.
-            </p>
+            </p>            
           </div>
-          <div className="mx-auto w-full max-w-sm space-y-2">
-            <NotifyForm />
-          </div>
+          <a href="https://apps.apple.com/us/app/purdue-hoops/id6503179035" className="w-fit">
+            <FaAppStoreIos size={80} />
+          </a>
         </div>
       </section>
       <section className="w-full py-12 md:py-24 lg:py-32 border-t" id="contact">
